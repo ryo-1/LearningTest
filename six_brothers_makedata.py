@@ -1,12 +1,12 @@
-import os, glob
+import glob
 import numpy as np
 from sklearn import cross_validation
 from keras.preprocessing.image import load_img, img_to_array
 
 root_dir = "./image/"
-categories = ["man", "valtan"]
+categories = ["zoffy", "man", "seven", "jack", "ace", "taro"]
 nb_classes = len(categories)
-image_size = 32
+image_size = 64
 
 X = []
 Y = []
@@ -24,5 +24,5 @@ Y = np.array(Y)
 X_train, X_test, y_train, y_test = \
     cross_validation.train_test_split(X, Y)
 xy = (X_train, X_test, y_train, y_test)
-np.save("./image/man.npy", xy)
+np.save("./image/six_brothers.npy", xy)
 print("ok,", len(Y))

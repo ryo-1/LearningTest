@@ -5,12 +5,12 @@ from keras.layers import Convolution2D, MaxPooling2D
 from keras.utils import np_utils
 
 root_dir = "./image/"
-categories = ["man", "valtan"]
+categories = ["zoffy", "man", "seven", "jack", "ace", "taro"]
 nb_classes = len(categories)
-image_size = 32
+image_size = 64
 
 def main():
-    X_train, X_test, y_train, y_test = np.load("./image/man.npy")
+    X_train, X_test, y_train, y_test = np.load("./image/six_brothers.npy")
     X_train = X_train.astype("float") / 256
     X_test  = X_test.astype("float")  / 256
     y_train = np_utils.to_categorical(y_train, nb_classes)
@@ -20,21 +20,31 @@ def main():
 
 def build_model(in_shape):
     model = Sequential()
-    model.add(Convolution2D(32, 3, 3,
+    model.add(Convolution2D(64, 3, 3,
 	border_mode='same',
 	input_shape=in_shape))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.25))
-    model.add(Convolution2D(64, 3, 3, border_mode='same'))
+    model.add(Convolution2D(32, 3, 3, border_mode='same'))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.25))
-    model.add(Convolution2D(64, 3, 3, border_mode='same'))
+    model.add(Convolution2D(32, 3, 3, border_mode='same'))
     model.add(Activation('relu'))
-    model.add(Convolution2D(64, 3, 3))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.25))
+    model.add(Convolution2D(32, 3, 3, border_mode='same'))
+    model.add(Activation('relu'))
+    model.add(MaxPooling2D(pool_size=(1, 1)))
+    model.add(Dropout(0.5))
+    model.add(Convolution2D(32, 3, 3, border_mode='same'))
+    model.add(Activation('relu'))
+    model.add(Convolution2D(32, 3, 3, border_mode='same'))
+    model.add(Activation('relu'))
+    model.add(Convolution2D(16, 3, 3, border_mode='same'))
+    model.add(Activation('relu'))
+    model.add(Convolution2D(16, 3, 3))
+    model.add(MaxPooling2D(pool_size=(1, 1)))
+    model.add(Dropout(0.5))
     model.add(Flatten())
     model.add(Dense(512))
     model.add(Activation('relu'))
@@ -48,8 +58,8 @@ def build_model(in_shape):
 
 def model_train(X, y):
     model = build_model(X.shape[1:])
-    model.fit(X, y, batch_size=10, nb_epoch=15, validation_split=0.1)
-    hdf5_file = "./image/apple-model.h5"
+    model.fit(X, y, batch_size=48, nb_epoch=100, validation_split=0.5)
+    hdf5_file = "./image/six_brothers.h5"
     model.save_weights(hdf5_file)
     return model
 
